@@ -77,7 +77,7 @@ export function ShipmentEditDialog({ open, shipment, onClose }: Props) {
   const footer = (
     <div className="flex justify-end gap-2">
       <Button
-        variant="ghost"
+        variant="outline"
         onClick={onClose}
         disabled={editShipmentMutation.isPending}
       >

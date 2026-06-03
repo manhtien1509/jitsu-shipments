@@ -14,11 +14,20 @@ import { useAssignmentsSelection } from "@/features/assignments/pages/hooks/useA
 import { useAssignmentsPageDialogs } from "@/features/assignments/pages/hooks/useAssignmentsPageDialogs";
 import { useAssignmentsPageActions } from "@/features/assignments/pages/hooks/useAssignmentsPageActions";
 import { AssignmentsPageDialogs } from "@/features/assignments/pages/AssignmentsPageDialogs";
+import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
 
 export function AssignmentsPage() {
   const navigate = useNavigate();
   const { assignmentId, shipmentId, assignments, shipments, selectedShipment } =
     useAssignmentsSelection();
+
+  const title = selectedShipment
+    ? `${selectedShipment.label} · ${selectedShipment.client_name}`
+    : assignmentId
+      ? `Assignment ${assignmentId}`
+      : "Assignments";
+
+  useDocumentTitle(title);
 
   const {
     dialog,

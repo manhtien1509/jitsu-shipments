@@ -6,11 +6,11 @@ import { ShipmentListPanel } from "../components/list/ShipmentListPanel";
 import { ShipmentDetailPanel } from "../components/detail/ShipmentDetailPanel";
 import { ShipmentsPageDialogs } from "./ShipmentsPageDialogs";
 import { useDeleteShipmentHandler } from "./hooks/useDeleteShipmentHandler";
+import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
 
 export function ShipmentsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editingShipment, setEditingShipment] = useState<Shipment | null>(null);
-
   const {
     deletingShipment,
     setDeletingShipment,
@@ -18,6 +18,8 @@ export function ShipmentsPage() {
     handleDeleteConfirm,
     handleDeleteClose,
   } = useDeleteShipmentHandler();
+
+  useDocumentTitle("Shipments");
 
   return (
     <div className="flex h-full flex-col">
