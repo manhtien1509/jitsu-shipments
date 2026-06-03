@@ -1,4 +1,4 @@
-import { STATUS_LABEL } from "@/features/shipments/lib/shipment.utils";
+import { STATUS_LABEL } from "@/features/shipments/lib/shipment-utils";
 import type {
   Shipment,
   ShipmentStatus,

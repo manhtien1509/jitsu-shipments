@@ -5,7 +5,7 @@ import { Badge } from "@/shared/components/ui";
 import {
   STATUS_BADGE_VARIANT,
   STATUS_LABEL,
-} from "@/features/shipments/lib/shipment.utils";
+} from "@/features/shipments/lib/shipment-utils";
 import { AssignmentRouteMap } from "@/shared/components/map/AssignmentRouteMap";
 import type { Shipment } from "@/features/shipments/types/shipment.types";
 

@@ -4,7 +4,7 @@ import { Button, EmptyState, SkeletonRow } from "@/shared/components/ui";
 import { useShipments } from "@/features/shipments/api/useShipments";
 import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
 import { ShipmentSearchBar } from "./ShipmentSearchBar";
-import { STATUS_ORDER } from "@/features/shipments/lib/shipment.utils";
+import { STATUS_ORDER } from "@/features/shipments/lib/shipment-utils";
 import type {
   Shipment,
   ShipmentStatus,

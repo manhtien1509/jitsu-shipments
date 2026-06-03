@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 import { useEditShipment } from "@/features/shipments/api/useEditShipment";
 import {
-  getValidNextStatuses,
+  getStatusDropdownOptions,
   requiresAssignment,
 } from "@/features/shipments/lib/status-transitions";
 import { useAssignments } from "@/features/assignments/api/useAssignments";
@@ -40,7 +40,9 @@ export function ShipmentEditDialog({ open, shipment, onClose }: Props) {
 
   const status = watch("status");
 
-  const validStatuses = shipment ? getValidNextStatuses(shipment.status) : [];
+  const validStatuses = shipment
+    ? getStatusDropdownOptions(shipment.status)
+    : [];
   const showAssignment = requiresAssignment(status);
   const openAssignments = assignments.filter((a) => a.status === "OPEN");
 

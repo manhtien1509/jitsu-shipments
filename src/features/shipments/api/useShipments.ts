@@ -11,7 +11,7 @@ export function useShipments() {
 
 export function useShipment(id: string | null) {
   return useQuery({
-    queryKey: id ? shipmentKeys.detail(id) : ["shipment", "disabled"],
+    queryKey: shipmentKeys.detail(id ?? "__none__"),
     queryFn: () => shipmentsApi.getById(id!),
     enabled: !!id,
   });

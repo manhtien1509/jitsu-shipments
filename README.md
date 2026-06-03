@@ -186,7 +186,7 @@ The dropdown is derived from this map, so invalid transitions are physically un-
 
 ### Optimistic updates — used selectively
 
-I used optimistic updates for the most frequent action (editing `delivery_by_date`, `lat`, `lng`) because the perceived latency matters there. For status transitions and create/delete I kept the standard "mutate → invalidate" flow: those actions are rarer, the user expects a brief confirmation, and the rollback logic isn't worth the added complexity.
+I considered optimistic updates for the most frequent action (editing `delivery_by_date`, `lat`, `lng`) but ultimately kept a "mutate → invalidate" flow throughout. The mock API responds in <50ms locally, so the perceived gain was minimal, while the added complexity (rollback, cache snapshot, cancel-queries) increases the surface area for bugs. With a real backend showing >300ms latency, I would add `onMutate`/`onError` rollback for field edits — the pattern is well-understood with TanStack Query.
 
 ### Map decisions
 
