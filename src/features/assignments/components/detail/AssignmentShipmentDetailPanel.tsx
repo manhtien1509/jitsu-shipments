@@ -9,6 +9,7 @@ import {
   STATUS_LABEL,
 } from "@/features/shipments/lib/shipment-utils";
 import type { Shipment } from "@/features/shipments/types/shipment.types";
+import { LoadingFallback } from "@/shared/components/feedback/LoadingFallback";
 
 const AssignmentRouteMap = lazy(() =>
   import("@/shared/components/map/AssignmentRouteMap").then((m) => ({
@@ -85,11 +86,7 @@ export function AssignmentShipmentDetailPanel({
             Route ({assignmentShipments.length} stops)
           </h3>
 
-          <Suspense
-            fallback={
-              <div className="h-60 w-full animate-pulse rounded-lg bg-gray-100" />
-            }
-          >
+          <Suspense fallback={<LoadingFallback />}>
             <AssignmentRouteMap
               shipments={assignmentShipments}
               selectedShipmentId={shipment?.id}
