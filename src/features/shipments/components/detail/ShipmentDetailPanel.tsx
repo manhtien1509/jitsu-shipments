@@ -1,11 +1,18 @@
 import { PackageOpen } from "lucide-react";
+import { lazy, Suspense } from "react";
 import { EmptyState, SkeletonRow } from "@/shared/components/ui";
 import { useShipment } from "@/features/shipments/api/useShipments";
 import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
-import { ShipmentMap } from "@/shared/components/map/ShipmentMap";
 import { ShipmentDetailHeader } from "./ShipmentDetailHeader";
 import { ShipmentDetailInfo } from "./ShipmentDetailInfo";
-import type { Shipment } from "../..";
+import type { Shipment } from "@/features/shipments/types/shipment.types";
+import { LoadingFallback } from "@/shared/components/feedback/LoadingFallback";
+
+const ShipmentMap = lazy(() =>
+  import("@/shared/components/map/ShipmentMap").then((m) => ({
+    default: m.ShipmentMap,
+  })),
+);
 
 interface Props {
   onEdit?: (shipment: Shipment) => void;
@@ -74,7 +81,9 @@ export function ShipmentDetailPanel({ onEdit, onDelete }: Props) {
 
       <div className="py-4 border-t">
         <h3 className="text-sm font-medium mb-2">Location</h3>
-        <ShipmentMap lat={data.lat} lng={data.lng} label={data.label} />
+        <Suspense fallback={<LoadingFallback />}>
+          <ShipmentMap lat={data.lat} lng={data.lng} label={data.label} />
+        </Suspense>
       </div>
 
       <ShipmentDetailInfo shipment={data} />

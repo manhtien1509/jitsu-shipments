@@ -1,11 +1,12 @@
 import type { ReactNode } from "react";
 import { cn } from "@/shared/lib/cn";
 
-interface Props {
+interface TriSplitLayoutProps {
   left: ReactNode;
   middle: ReactNode;
-  right?: ReactNode;
+  right: ReactNode;
   showRight?: boolean;
+  mobileView?: "left" | "middle" | "right";
   leftClassName?: string;
   middleClassName?: string;
   rightClassName?: string;
@@ -16,34 +17,54 @@ export function TriSplitLayout({
   middle,
   right,
   showRight = true,
+  mobileView = "left",
   leftClassName,
   middleClassName,
   rightClassName,
-}: Props) {
+}: TriSplitLayoutProps) {
   return (
-    <div className="flex h-full">
-      <aside
+    <div className="flex h-full w-full overflow-hidden">
+      <div
         className={cn(
-          "w-80 shrink-0 overflow-y-auto border-r border-neutral-200 bg-white",
+          "flex-col overflow-hidden border-r",
+          // mobile
+          mobileView === "left" ? "flex w-full" : "hidden",
+          // tablet+
+          "md:flex md:w-70 md:shrink-0",
+          // desktop
+          "lg:w-80",
           leftClassName,
         )}
       >
         {left}
-      </aside>
-      <section
+      </div>
+
+      <div
         className={cn(
-          "w-96 shrink-0 overflow-y-auto border-r border-neutral-200 bg-neutral-50",
+          "flex-col overflow-hidden border-r",
+          // mobile
+          mobileView === "middle" ? "flex w-full" : "hidden",
+          "md:flex md:flex-1 md:min-w-0",
+          "lg:flex-none lg:w-105 xl:w-115 lg:shrink-0",
           middleClassName,
         )}
       >
         {middle}
-      </section>
+      </div>
+
       {showRight && (
-        <section
-          className={cn("flex-1 overflow-y-auto bg-neutral-50", rightClassName)}
+        <div
+          className={cn(
+            "flex-col overflow-hidden",
+            // mobile
+            mobileView === "right" ? "flex w-full" : "hidden",
+            "md:hidden",
+            "lg:flex lg:flex-1 lg:min-w-0",
+            rightClassName,
+          )}
         >
           {right}
-        </section>
+        </div>
       )}
     </div>
   );

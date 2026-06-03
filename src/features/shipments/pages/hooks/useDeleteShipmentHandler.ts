@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import type { Shipment } from "@/features/shipments/types/shipment.types";
-import { useShipments } from "../../api/useShipments";
-import { useShipmentsStore } from "../../store/shipments.store";
-import { useDeleteShipment } from "../../api/useDeleteShipment";
+import { useShipments } from "@/features/shipments/api/useShipments";
+import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
+import { useDeleteShipment } from "@/features/shipments/api/useDeleteShipment";
 
 export function useDeleteShipmentHandler() {
   const [deletingShipment, setDeletingShipment] = useState<Shipment | null>(

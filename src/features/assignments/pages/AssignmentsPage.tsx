@@ -1,10 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus } from "lucide-react";
 
 import { PageHeader } from "@/shared/components/layout/PageHeader";
 import { TriSplitLayout } from "@/shared/components/layout/TriSplitLayout";
-import { Button } from "@/shared/components/ui";
 
 import { AssignmentListPanel } from "@/features/assignments/components/list/AssignmentListPanel";
 import { AssignmentDetailPanel } from "@/features/assignments/components/detail/AssignmentDetailPanel";
@@ -15,19 +13,42 @@ import { useAssignmentsPageDialogs } from "@/features/assignments/pages/hooks/us
 import { useAssignmentsPageActions } from "@/features/assignments/pages/hooks/useAssignmentsPageActions";
 import { AssignmentsPageDialogs } from "@/features/assignments/pages/AssignmentsPageDialogs";
 import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
+import { ResponsiveSheet } from "@/shared/components/layout/ResponsiveSheet";
+import { useMediaQuery } from "@/shared/hooks/useMediaQuery";
 
 export function AssignmentsPage() {
   const navigate = useNavigate();
   const { assignmentId, shipmentId, assignments, shipments, selectedShipment } =
     useAssignmentsSelection();
 
-  const title = selectedShipment
-    ? `${selectedShipment.label} · ${selectedShipment.client_name}`
-    : assignmentId
-      ? `Assignment ${assignmentId}`
-      : "Assignments";
+  const isTablet = useMediaQuery("(min-width: 768px) and (max-width: 1023px)");
 
-  useDocumentTitle(title);
+  const mobileView: "left" | "middle" | "right" = shipmentId
+    ? "right"
+    : assignmentId
+      ? "middle"
+      : "left";
+
+  const headerConfig = (() => {
+    if (shipmentId && selectedShipment) {
+      return {
+        title: selectedShipment.label ?? "Shipment",
+        subtitle: selectedShipment.client_name,
+        showBack: true,
+        onBack: () => navigate(`/assignments/${assignmentId}`),
+      };
+    }
+    if (assignmentId) {
+      return {
+        title: `Assignment ${assignmentId}`,
+        showBack: true,
+        onBack: () => navigate(`/assignments`),
+      };
+    }
+    return { title: "Assignments", showBack: false };
+  })();
+
+  useDocumentTitle(headerConfig.title);
 
   const {
     dialog,
@@ -57,24 +78,27 @@ export function AssignmentsPage() {
     }
   }, [shipmentId, assignmentId, selectedShipment, navigate]);
 
+  const shipmentDetail = (
+    <AssignmentShipmentDetailPanel
+      shipment={selectedShipment}
+      assignmentShipments={shipments}
+      onEdit={openEditShipment}
+      onDelete={openDeleteShipment}
+    />
+  );
+
   return (
     <div className="flex h-full flex-col">
       <PageHeader
-        title="Assignments"
-        actions={
-          <Button
-            size="sm"
-            leftIcon={<Plus className="h-4 w-4" />}
-            onClick={openCreateAssignment}
-          >
-            New Assignment
-          </Button>
-        }
+        title={"Assignments"}
+        showBack={headerConfig.showBack}
+        onBack={headerConfig.onBack}
       />
 
       <div className="flex-1 overflow-hidden">
         <TriSplitLayout
           showRight={!!shipmentId}
+          mobileView={mobileView}
           left={
             <AssignmentListPanel
               selectedId={assignmentId}
@@ -93,16 +117,22 @@ export function AssignmentsPage() {
               onDelete={openDeleteAssignment}
             />
           }
-          right={
-            <AssignmentShipmentDetailPanel
-              shipment={selectedShipment}
-              assignmentShipments={shipments}
-              onEdit={openEditShipment}
-              onDelete={openDeleteShipment}
-            />
-          }
+          right={shipmentDetail}
         />
       </div>
+
+      {isTablet && (
+        <ResponsiveSheet
+          open={!!shipmentId}
+          onClose={() =>
+            assignmentId && navigate(`/assignments/${assignmentId}`)
+          }
+          side="right"
+          title={selectedShipment?.label}
+        >
+          {shipmentDetail}
+        </ResponsiveSheet>
+      )}
 
       <AssignmentsPageDialogs
         dialog={dialog}

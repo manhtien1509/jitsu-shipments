@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
-import type { ReactNode } from 'react';
-import { createPortal } from 'react-dom';
-import { X } from 'lucide-react';
-import { cn } from '@/shared/lib/cn';
+import { useEffect, useRef } from "react";
+import type { ReactNode } from "react";
+import { createPortal } from "react-dom";
+import { X } from "lucide-react";
+import { cn } from "@/shared/lib/cn";
 
 interface DialogProps {
   open: boolean;
@@ -11,14 +11,14 @@ interface DialogProps {
   description?: string;
   children?: ReactNode;
   footer?: ReactNode;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   className?: string;
 }
 
 const sizeStyles = {
-  sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-2xl',
+  sm: "max-w-sm",
+  md: "max-w-md",
+  lg: "max-w-2xl",
 };
 
 export function Dialog({
@@ -28,40 +28,56 @@ export function Dialog({
   description,
   children,
   footer,
-  size = 'md',
+  size = "md",
   className,
 }: DialogProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const pointerDownInsideRef = useRef(false);
 
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === "Escape") onClose();
     };
-    document.addEventListener('keydown', handleKey);
+    document.addEventListener("keydown", handleKey);
     const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    document.body.style.overflow = "hidden";
     return () => {
-      document.removeEventListener('keydown', handleKey);
+      document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = prev;
     };
   }, [open, onClose]);
 
   if (!open) return null;
 
+  const handleOverlayPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    pointerDownInsideRef.current =
+      contentRef.current?.contains(e.target as Node) ?? false;
+  };
+
+  const handleOverlayMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    const wasInside = pointerDownInsideRef.current;
+    pointerDownInsideRef.current = false;
+
+    if (wasInside) return;
+    if (contentRef.current?.contains(e.target as Node)) return;
+
+    onClose();
+  };
+
   return createPortal(
     <div
       className="fixed inset-0 z-9999 flex items-center justify-center p-4 bg-black/50"
-      onClick={onClose}
+      onPointerDown={handleOverlayPointerDown}
+      onMouseUp={handleOverlayMouseUp}
       role="dialog"
       aria-modal="true"
     >
       <div
-        ref={ref}
-        onClick={(e) => e.stopPropagation()}
+        ref={contentRef}
         className={cn(
-          'relative w-full bg-white rounded-lg shadow-xl',
-          'flex flex-col max-h-[90vh]',
+          "relative w-full bg-white rounded-lg shadow-xl",
+          "flex flex-col max-h-[90vh]",
           sizeStyles[size],
           className,
         )}
@@ -75,9 +91,7 @@ export function Dialog({
                 </h2>
               )}
               {description && (
-                <p className="mt-1 text-sm text-neutral-500">
-                  {description}
-                </p>
+                <p className="mt-1 text-sm text-neutral-500">{description}</p>
               )}
             </div>
             <button

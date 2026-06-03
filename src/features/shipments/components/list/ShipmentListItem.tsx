@@ -18,10 +18,13 @@ export function ShipmentListItem({ shipment, selected, onClick }: Props) {
 
   useEffect(() => {
     if (selected) {
-      ref.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
+      // Only scroll if item is OUT of viewport
+      const rect = ref.current?.getBoundingClientRect();
+      const isVisible =
+        rect && rect.top >= 0 && rect.bottom <= window.innerHeight;
+      if (!isVisible) {
+        ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
     }
   }, [selected]);
 

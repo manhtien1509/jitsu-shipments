@@ -82,7 +82,6 @@ export function AssignmentRouteMap({
   selectedShipmentId,
   className,
 }: Props) {
-  // Sort theo ETA tăng dần để vẽ polyline theo thứ tự delivery dự kiến
   const sorted = useMemo(
     () =>
       [...shipments].sort(
@@ -101,7 +100,6 @@ export function AssignmentRouteMap({
     ? [selected.lat, selected.lng]
     : null;
 
-  // Fallback nếu không có shipment
   if (shipments.length === 0) {
     return (
       <div

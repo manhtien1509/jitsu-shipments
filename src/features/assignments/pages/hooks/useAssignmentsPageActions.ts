@@ -6,8 +6,8 @@ import type {
   Shipment,
   ShipmentUpdate,
 } from "@/features/shipments/types/shipment.types";
-import type { Assignment } from "../../types/assignment.types";
-import { useDeleteAssignment } from "../../api/useDeleteAssignment";
+import type { Assignment } from "@/features/assignments/types/assignment.types";
+import { useDeleteAssignment } from "@/features/assignments/api/useDeleteAssignment";
 
 type Args = {
   assignmentId?: string;

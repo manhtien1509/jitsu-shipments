@@ -64,19 +64,21 @@ export function AssignmentDetailPanel({
         onDelete={() => onDelete(assignment.id)}
       />
 
-      <div className="flex-1 space-y-4 overflow-y-auto p-4">
-        <AssignmentInfoSection assignment={assignment} />
+      <div className="flex-1 overflow-y-auto">
+        <div className="mx-auto w-full max-w-3xl p-4 space-y-6">
+          <AssignmentInfoSection assignment={assignment} />
 
-        <div>
-          <h3 className="mb-2 text-sm font-semibold text-neutral-900">
-            Shipments ({assignment.shipment_count})
-          </h3>
-          <AssignmentShipmentsList
-            shipments={shipments}
-            isLoading={shipmentsLoading}
-            selectedId={selectedShipmentId}
-            onSelect={onSelectShipment}
-          />
+          <div>
+            <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
+              Shipments ({assignment.shipment_count})
+            </h3>
+            <AssignmentShipmentsList
+              shipments={shipments ?? []}
+              isLoading={shipmentsLoading}
+              selectedId={selectedShipmentId}
+              onSelect={onSelectShipment}
+            />
+          </div>
         </div>
       </div>
     </div>

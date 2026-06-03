@@ -1,9 +1,14 @@
 import { Navigate, type RouteObject } from "react-router-dom";
+import { Suspense } from "react";
 import { AppShell } from "@/shared/components/layout/AppShell";
 import { ErrorPage } from "@/shared/pages/ErrorPage";
 import { NotFoundPage } from "@/shared/pages/NotFoundPage";
-import { ShipmentsPage } from "@/features/shipments/pages/ShipmentsPage";
-import { AssignmentsPage } from "@/features/assignments/pages/AssignmentsPage";
+import { LoadingFallback } from "@/shared/components/feedback/LoadingFallback";
+import { ShipmentsPage, AssignmentsPage } from "./lazyPages";
+
+const withSuspense = (element: React.ReactNode) => (
+  <Suspense fallback={<LoadingFallback />}>{element}</Suspense>
+);
 
 export const routes: RouteObject[] = [
   {
@@ -12,15 +17,15 @@ export const routes: RouteObject[] = [
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Navigate to="/shipments" replace /> },
-      { path: "shipments", element: <ShipmentsPage /> },
-      { path: "assignments", element: <AssignmentsPage /> },
+      { path: "shipments", element: withSuspense(<ShipmentsPage />) },
+      { path: "assignments", element: withSuspense(<AssignmentsPage />) },
       {
         path: "assignments/:assignmentId",
-        element: <AssignmentsPage />,
+        element: withSuspense(<AssignmentsPage />),
       },
       {
         path: "assignments/:assignmentId/shipments/:shipmentId",
-        element: <AssignmentsPage />,
+        element: withSuspense(<AssignmentsPage />),
       },
       { path: "*", element: <NotFoundPage /> },
     ],

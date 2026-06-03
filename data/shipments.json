@@ -1286,19 +1286,6 @@
       "lng": -96.73520005800613
     },
     {
-      "id": "shp_099",
-      "client_name": "Samsung",
-      "label": "SEA-581-250529-99",
-      "status": "OPEN",
-      "arrival_date": "2026-05-29T10:12:24.187Z",
-      "delivery_by_date": "2026-05-31T10:12:24.187Z",
-      "eta": "2026-05-30T23:12:24.187Z",
-      "warehouse_id": "581",
-      "assignment_id": null,
-      "lat": 32.8084394700063,
-      "lng": -96.81213124851105
-    },
-    {
       "id": "shp_100",
       "client_name": "DHL",
       "label": "EWR-581-250520-100",

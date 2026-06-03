@@ -1,4 +1,6 @@
 import { Pencil, PackageOpen, Trash2 } from "lucide-react";
+import { lazy, Suspense } from "react";
+
 import { Button, EmptyState } from "@/shared/components/ui";
 import { ShipmentDetailInfo } from "@/features/shipments/components/detail/ShipmentDetailInfo";
 import { Badge } from "@/shared/components/ui";
@@ -6,8 +8,13 @@ import {
   STATUS_BADGE_VARIANT,
   STATUS_LABEL,
 } from "@/features/shipments/lib/shipment-utils";
-import { AssignmentRouteMap } from "@/shared/components/map/AssignmentRouteMap";
 import type { Shipment } from "@/features/shipments/types/shipment.types";
+
+const AssignmentRouteMap = lazy(() =>
+  import("@/shared/components/map/AssignmentRouteMap").then((m) => ({
+    default: m.AssignmentRouteMap,
+  })),
+);
 
 interface Props {
   shipment: Shipment | null;
@@ -77,11 +84,18 @@ export function AssignmentShipmentDetailPanel({
           <h3 className="mb-2 text-sm font-semibold text-neutral-900">
             Route ({assignmentShipments.length} stops)
           </h3>
-          <AssignmentRouteMap
-            shipments={assignmentShipments}
-            selectedShipmentId={shipment?.id}
-            className="h-72 overflow-hidden rounded-md border border-neutral-200"
-          />
+
+          <Suspense
+            fallback={
+              <div className="h-60 w-full animate-pulse rounded-lg bg-gray-100" />
+            }
+          >
+            <AssignmentRouteMap
+              shipments={assignmentShipments}
+              selectedShipmentId={shipment?.id}
+              className="h-72 overflow-hidden rounded-md border border-neutral-200"
+            />
+          </Suspense>
         </div>
 
         {/* Info */}

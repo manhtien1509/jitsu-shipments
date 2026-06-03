@@ -11,6 +11,8 @@ import { useDocumentTitle } from "@/shared/hooks/useDocumentTitle";
 export function ShipmentsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [editingShipment, setEditingShipment] = useState<Shipment | null>(null);
+  const [mobileView, setMobileView] = useState<"left" | "right">("left");
+
   const {
     deletingShipment,
     setDeletingShipment,
@@ -23,11 +25,21 @@ export function ShipmentsPage() {
 
   return (
     <div className="flex h-full flex-col">
-      <PageHeader title="Shipments" />
+      <PageHeader
+        title="Shipments"
+        showBack={mobileView === "right"}
+        onBack={() => setMobileView("left")}
+      />
 
       <div className="flex-1 min-h-0">
         <SplitLayout
-          left={<ShipmentListPanel onCreateClick={() => setCreateOpen(true)} />}
+          mobileView={mobileView}
+          left={
+            <ShipmentListPanel
+              onCreateClick={() => setCreateOpen(true)}
+              onSelect={() => setMobileView("right")}
+            />
+          }
           right={
             <ShipmentDetailPanel
               onEdit={setEditingShipment}

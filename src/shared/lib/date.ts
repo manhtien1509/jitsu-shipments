@@ -1,5 +1,3 @@
-// shared/lib/format-date.ts
-
 const INVALID = "—";
 
 function toDate(value?: string | null): Date | null {

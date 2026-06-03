@@ -14,9 +14,10 @@ import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
 
 interface Props {
   onCreateClick?: () => void;
+  onSelect?: (id: string) => void;
 }
 
-export function ShipmentListPanel({ onCreateClick }: Props) {
+export function ShipmentListPanel({ onCreateClick, onSelect }: Props) {
   const search = useShipmentsStore((s) => s.searchQuery);
   const setSearch = useShipmentsStore((s) => s.setSearchQuery);
   const debouncedSearch = useDebouncedValue(search, 250);
@@ -24,6 +25,11 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
   const { data, isLoading, isError, refetch } = useShipments();
   const selectedId = useShipmentsStore((s) => s.selectedId);
   const setSelectedId = useShipmentsStore((s) => s.setSelectedId);
+
+  const handleSelect = (id: string) => {
+    setSelectedId(id);
+    onSelect?.(id);
+  };
 
   const filtered = useMemo<Shipment[]>(() => {
     if (!data) return [];
@@ -120,7 +126,7 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
                 status={status}
                 shipments={grouped[status]}
                 selectedId={selectedId}
-                onSelect={setSelectedId}
+                onSelect={handleSelect}
               />
             ))}
           </div>
