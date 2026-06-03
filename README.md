@@ -37,7 +37,13 @@ This implementation includes all requirements from the Core and Stretch tiers, a
 npm install
 ```
 
-### 2. (Optional) Regenerate mock data
+### 2. Configure environment variables
+
+```bash
+cp .env.example .env
+```
+
+### 3. (Optional) Regenerate mock data
 
 The repo already includes `data/shipments.json` so you can run the app immediately.
 If you want a fresh dataset:
@@ -48,7 +54,7 @@ npm run gen:data
 
 > ⚠️ This will overwrite `data/shipments.json`. Mutations made through the UI (PUT/POST/DELETE) are persisted to this file by `json-server`, so re-run this script anytime you want to reset state.
 
-### 3. Run the app
+### 4. Run the app
 
 **Recommended — run web + API together:**
 
