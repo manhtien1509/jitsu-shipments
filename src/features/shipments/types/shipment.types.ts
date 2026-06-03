@@ -1,0 +1,18 @@
+export type ShipmentStatus = 'OPEN' | 'IN_TRANSIT' | 'DELIVERED';
+
+export interface Shipment {
+  id: string;
+  client_name: string;
+  label: string;
+  status: ShipmentStatus;
+  arrival_date: string;
+  delivery_by_date: string;
+  eta: string;
+  warehouse_id: string;
+  assignment_id?: string | null;
+  lat: number;
+  lng: number;
+}
+
+export type ShipmentUpdate = Partial<Omit<Shipment, 'id'>>;
+export type ShipmentCreate = Omit<Shipment, 'id'>;
