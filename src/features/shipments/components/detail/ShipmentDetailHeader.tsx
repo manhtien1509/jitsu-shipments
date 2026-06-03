@@ -1,8 +1,10 @@
-import { Pencil, Trash2 } from 'lucide-react';
-import { Badge, Button } from '@/shared/components/ui';
-import type { Shipment } from '../../types/shipment.types';
-import { STATUS_BADGE_VARIANT, STATUS_LABEL } from '../../lib/shipment.utils';
-
+import { Pencil, Trash2 } from "lucide-react";
+import { Badge, Button } from "@/shared/components/ui";
+import type { Shipment } from "@/features/shipments/types/shipment.types";
+import {
+  STATUS_BADGE_VARIANT,
+  STATUS_LABEL,
+} from "@/features/shipments/lib/shipment.utils";
 
 interface Props {
   shipment: Shipment;

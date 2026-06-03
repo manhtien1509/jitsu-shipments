@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { ShipmentCreate } from "../types/shipment.types";
-import { shipmentsApi } from "../api/shipments.api";
-import { shipmentKeys } from "../api/shipments.keys";
+import { shipmentsApi } from "./shipments.api";
+import { shipmentKeys } from "./shipments.keys";
 
 export function useCreateShipment() {
   const queryClient = useQueryClient();

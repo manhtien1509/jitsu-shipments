@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { formatDateLong } from "@/shared/lib/date";
-import type { Shipment } from "../../types/shipment.types";
+import type { Shipment } from "@/features/shipments/types/shipment.types";
 import { StatusBadge } from "../common/StatusBadge";
 
 interface Props {

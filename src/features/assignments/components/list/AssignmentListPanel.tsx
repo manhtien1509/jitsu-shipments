@@ -1,63 +1,60 @@
 import { useMemo } from "react";
 import { Inbox, Plus } from "lucide-react";
 import { Button, EmptyState, SkeletonRow } from "@/shared/components/ui";
-import { useShipments } from "@/features/shipments/api/useShipments";
-import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
-import { ShipmentSearchBar } from "./ShipmentSearchBar";
-import { STATUS_ORDER } from "@/features/shipments/lib/shipment.utils";
-import type {
-  Shipment,
-  ShipmentStatus,
-} from "@/features/shipments/types/shipment.types";
-import { ShipmentListGroup } from "./ShipmentListGroup";
 import { useDebouncedValue } from "@/shared/hooks/useDebouncedValue";
+import { useAssignments } from "@/features/assignments/api/useAssignments";
+import { useAssignmentsStore } from "@/features/assignments/store/assignments.store";
+import { ASSIGNMENT_STATUS_ORDER } from "@/features/assignments/lib/assignment-utils";
+import type {
+  Assignment,
+  AssignmentStatus,
+} from "@/features/assignments/types/assignment.types";
+import { AssignmentSearchBar } from "./AssignmentSearchBar";
+import { AssignmentListGroup } from "./AssignmentListGroup";
 
 interface Props {
+  selectedId: string | null;
+  onSelect: (id: string) => void;
   onCreateClick?: () => void;
 }
 
-export function ShipmentListPanel({ onCreateClick }: Props) {
-  const search = useShipmentsStore((s) => s.searchQuery);
-  const setSearch = useShipmentsStore((s) => s.setSearchQuery);
+export function AssignmentListPanel({
+  selectedId,
+  onSelect,
+  onCreateClick,
+}: Props) {
+  const search = useAssignmentsStore((s) => s.searchQuery);
+  const setSearch = useAssignmentsStore((s) => s.setSearchQuery);
   const debouncedSearch = useDebouncedValue(search, 250);
 
-  const { data, isLoading, isError, refetch } = useShipments();
-  const selectedId = useShipmentsStore((s) => s.selectedId);
-  const setSelectedId = useShipmentsStore((s) => s.setSelectedId);
+  const { data, isLoading, isError, refetch } = useAssignments();
 
-  const filtered = useMemo<Shipment[]>(() => {
+  const filtered = useMemo(() => {
     if (!data) return [];
     const q = debouncedSearch.trim().toLowerCase();
     if (!q) return data;
-
-    return data.filter((s) => {
-      return (
-        s.client_name.toLowerCase().includes(q) ||
-        (s.label ?? "").toLowerCase().includes(q)
-      );
-    });
+    return data.filter((a) => a.label.toLowerCase().includes(q));
   }, [data, debouncedSearch]);
 
   const grouped = useMemo(() => {
-    const map: Record<ShipmentStatus, Shipment[]> = {
+    const map: Record<AssignmentStatus, Assignment[]> = {
       OPEN: [],
-      IN_TRANSIT: [],
-      DELIVERED: [],
+      COMPLETED: [],
     };
-    for (const s of filtered) map[s.status].push(s);
+    for (const a of filtered) map[a.status].push(a);
     return map;
   }, [filtered]);
 
   return (
     <div className="flex h-full flex-col">
       {/* Toolbar */}
-      <div className="flex items-center gap-2 border-b border-neutral-200 px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-neutral-200 px-3 py-2">
         <div className="flex-1">
-          <ShipmentSearchBar value={search} onChange={setSearch} />
+          <AssignmentSearchBar value={search} onChange={setSearch} />
         </div>
         {onCreateClick && (
           <Button
-            size="md"
+            size="sm"
             onClick={onCreateClick}
             leftIcon={<Plus className="h-4 w-4" />}
           >
@@ -67,9 +64,9 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
       </div>
 
       {/* Body */}
-      <div className="flex-1 overflow-y-auto px-4 py-4">
+      <div className="flex-1 overflow-y-auto p-3">
         {isLoading && (
-          <div className="flex flex-col gap-2">
+          <div className="space-y-2">
             <SkeletonRow />
             <SkeletonRow />
             <SkeletonRow />
@@ -80,10 +77,10 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
         {isError && !isLoading && (
           <EmptyState
             icon={<Inbox className="h-6 w-6" />}
-            title="Failed to load shipments"
+            title="Failed to load assignments"
             description="Something went wrong. Please try again."
             action={
-              <Button variant="outline" onClick={() => refetch()}>
+              <Button variant="outline" size="sm" onClick={() => refetch()}>
                 Retry
               </Button>
             }
@@ -93,19 +90,20 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
         {!isLoading && !isError && filtered.length === 0 && (
           <EmptyState
             icon={<Inbox className="h-6 w-6" />}
-            title={debouncedSearch ? "No results" : "No shipments yet"}
+            title={debouncedSearch ? "No results" : "No assignments yet"}
             description={
               debouncedSearch
-                ? `No shipment matches "${debouncedSearch}".`
-                : "Create your first shipment to get started."
+                ? `No assignment matches "${debouncedSearch}".`
+                : "Create your first assignment."
             }
             action={
               !debouncedSearch && onCreateClick ? (
                 <Button
+                  size="sm"
                   onClick={onCreateClick}
                   leftIcon={<Plus className="h-4 w-4" />}
                 >
-                  New shipment
+                  New assignment
                 </Button>
               ) : undefined
             }
@@ -113,14 +111,14 @@ export function ShipmentListPanel({ onCreateClick }: Props) {
         )}
 
         {!isLoading && !isError && filtered.length > 0 && (
-          <div className="flex flex-col gap-5">
-            {STATUS_ORDER.map((status) => (
-              <ShipmentListGroup
+          <div>
+            {ASSIGNMENT_STATUS_ORDER.map((status) => (
+              <AssignmentListGroup
                 key={status}
                 status={status}
-                shipments={grouped[status]}
+                assignments={grouped[status]}
                 selectedId={selectedId}
-                onSelect={setSelectedId}
+                onSelect={onSelect}
               />
             ))}
           </div>

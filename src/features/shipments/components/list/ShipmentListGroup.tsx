@@ -1,5 +1,8 @@
-import { STATUS_LABEL } from "../../lib/shipment.utils";
-import type { Shipment, ShipmentStatus } from "../../types/shipment.types";
+import { STATUS_LABEL } from "@/features/shipments/lib/shipment.utils";
+import type {
+  Shipment,
+  ShipmentStatus,
+} from "@/features/shipments/types/shipment.types";
 import { ShipmentListItem } from "./ShipmentListItem";
 
 interface Props {

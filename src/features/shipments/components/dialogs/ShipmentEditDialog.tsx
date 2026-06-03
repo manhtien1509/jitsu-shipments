@@ -1,21 +1,24 @@
 import { Controller } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useEditShipment } from "../../hooks/useUpdateShipment";
-import { useShipmentEditForm } from "../../hooks/useShipmentEditForm";
+import { useEditShipment } from "@/features/shipments/api/useEditShipment";
 import {
   getValidNextStatuses,
   requiresAssignment,
-} from "../../lib/status-transitions";
-import { useAssignments } from "@/features/assignments/hooks/useAssignments";
-import type { Shipment } from "../../types/shipment.types";
-import type { ShipmentEditFormValues } from "../../schemas/shipment-edit.schema";
+} from "@/features/shipments/lib/status-transitions";
+import { useAssignments } from "@/features/assignments/api/useAssignments";
+import type {
+  Shipment,
+  ShipmentUpdate,
+} from "@/features/shipments/types/shipment.types";
+import type { ShipmentEditFormValues } from "@/features/shipments/schemas/shipment-edit.schema";
 import { Dialog } from "@/shared/components/ui/Dialog";
 import { Button } from "@/shared/components/ui/Button";
 import { FormField } from "@/shared/components/form/FormField";
 import { TextInput } from "@/shared/components/form/TextInput";
 import { Select } from "@/shared/components/ui";
 import { LatLngFields } from "../forms/LatLngFields";
+import { useShipmentEditForm } from "./hooks/useShipmentEditForm";
 
 interface Props {
   open: boolean;
@@ -44,32 +47,31 @@ export function ShipmentEditDialog({ open, shipment, onClose }: Props) {
   const onSubmit = handleSubmit(async (values: ShipmentEditFormValues) => {
     if (!shipment) return;
 
+    // Business rule: OPEN status → no assignment
     const nextAssignmentId =
-      values.status === "OPEN" ? null : values.assignment_id;
+      values.status === "OPEN" ? null : (values.assignment_id ?? null);
 
-    const updatedShipment: Shipment = {
-      ...shipment,
-
+    const next: ShipmentUpdate = {
       delivery_by_date: new Date(values.delivery_by_date).toISOString(),
-
       lat: values.lat,
       lng: values.lng,
-
       status: values.status,
-
       assignment_id: nextAssignmentId,
     };
 
-    editShipmentMutation.mutate(updatedShipment, {
-      onSuccess: () => {
-        toast.success("Shipment updated");
-        onClose();
+    editShipmentMutation.mutate(
+      { prev: shipment, next },
+      {
+        onSuccess: () => {
+          toast.success("Shipment updated");
+          onClose();
+        },
+        onError: (err) =>
+          toast.error(
+            err instanceof Error ? err.message : "Failed to update shipment",
+          ),
       },
-
-      onError: () => {
-        toast.error("Failed to update shipment");
-      },
-    });
+    );
   });
 
   const footer = (

@@ -1,5 +1,8 @@
-import type { ShipmentStatus } from "../../types/shipment.types";
-import { STATUS_BADGE_VARIANT, STATUS_LABEL } from "../../lib/shipment.utils";
+import type { ShipmentStatus } from "@/features/shipments/types/shipment.types";
+import {
+  STATUS_BADGE_VARIANT,
+  STATUS_LABEL,
+} from "@/features/shipments/lib/shipment.utils";
 import { Badge } from "@/shared/components/ui";
 
 interface Props {

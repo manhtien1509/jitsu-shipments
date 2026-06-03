@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { shipmentsApi } from '../api/shipments.api';
-import { shipmentKeys } from '../api/shipments.keys';
+import { useQuery } from "@tanstack/react-query";
+import { shipmentsApi } from "./shipments.api";
+import { shipmentKeys } from "./shipments.keys";
 
 export function useShipments() {
   return useQuery({
@@ -11,7 +11,7 @@ export function useShipments() {
 
 export function useShipment(id: string | null) {
   return useQuery({
-    queryKey: shipmentKeys.detail(id ?? ''),
+    queryKey: id ? shipmentKeys.detail(id) : ["shipment", "disabled"],
     queryFn: () => shipmentsApi.getById(id!),
     enabled: !!id,
   });

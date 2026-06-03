@@ -1,16 +1,10 @@
-import type { Shipment } from '../../types/shipment.types';
+import type { Shipment } from "@/features/shipments/types/shipment.types";
 
 interface Props {
   shipment: Shipment;
 }
 
-function InfoRow({
-  label,
-  value,
-}: {
-  label: string;
-  value: React.ReactNode;
-}) {
+function InfoRow({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="grid grid-cols-3 gap-3 py-2 border-b border-neutral-100 last:border-0">
       <dt className="text-sm text-neutral-500">{label}</dt>
@@ -27,7 +21,7 @@ export function ShipmentInfoSection({ shipment }: Props) {
       </h3>
       <dl>
         <InfoRow label="Client" value={shipment.client_name} />
-        <InfoRow label="Label" value={shipment.label || '—'} />
+        <InfoRow label="Label" value={shipment.label || "—"} />
         <InfoRow label="Warehouse" value={shipment.warehouse_id} />
       </dl>
     </section>

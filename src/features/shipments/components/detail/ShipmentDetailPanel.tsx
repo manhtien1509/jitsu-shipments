@@ -1,14 +1,15 @@
 import { PackageOpen } from "lucide-react";
 import { EmptyState, SkeletonRow } from "@/shared/components/ui";
-import { useShipment } from "../../hooks/useShipments";
-import { useShipmentsStore } from "../../store/shipments.store";
+import { useShipment } from "@/features/shipments/api/useShipments";
+import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
 import { ShipmentMap } from "@/shared/components/map/ShipmentMap";
 import { ShipmentDetailHeader } from "./ShipmentDetailHeader";
 import { ShipmentDetailInfo } from "./ShipmentDetailInfo";
+import type { Shipment } from "../..";
 
 interface Props {
-  onEdit?: (id: string) => void;
-  onDelete?: (id: string) => void;
+  onEdit?: (shipment: Shipment) => void;
+  onDelete?: (shipment: Shipment) => void;
 }
 
 export function ShipmentDetailPanel({ onEdit, onDelete }: Props) {
@@ -67,8 +68,8 @@ export function ShipmentDetailPanel({ onEdit, onDelete }: Props) {
     <div className="flex h-full flex-col gap-6 overflow-y-auto p-6">
       <ShipmentDetailHeader
         shipment={data}
-        onEdit={onEdit ? () => onEdit(data.id) : undefined}
-        onDelete={onDelete ? () => onDelete(data.id) : undefined}
+        onEdit={onEdit ? () => onEdit(data) : undefined}
+        onDelete={onDelete ? () => onDelete(data) : undefined}
       />
 
       <div className="py-4 border-t">

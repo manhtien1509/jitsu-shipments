@@ -3,19 +3,19 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
-import { useCreateShipment } from "../../hooks/useCreateShipment";
+import { useCreateShipment } from "@/features/shipments/api/useCreateShipment";
 import {
   shipmentCreateSchema,
   type ShipmentCreateFormInput,
   type ShipmentCreateFormValues,
-} from "../../schemas/shipment-create.schema";
-import { buildShipmentCreatePayload } from "../../lib/shipment-create.mapper";
+} from "@/features/shipments/schemas/shipment-create.schema";
+import { buildShipmentCreatePayload } from "@/features/shipments/lib/shipment-create.mapper";
 import { Dialog } from "@/shared/components/ui/Dialog";
 import { Button } from "@/shared/components/ui/Button";
 import { FormField } from "@/shared/components/form/FormField";
 import { TextInput } from "@/shared/components/form/TextInput";
 import { LatLngFields } from "../forms/LatLngFields";
-import { useShipmentsStore } from "../..";
+import { useShipmentsStore } from "@/features/shipments/store/shipments.store";
 
 interface Props {
   open: boolean;

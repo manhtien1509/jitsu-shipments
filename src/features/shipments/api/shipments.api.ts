@@ -17,7 +17,7 @@ export const shipmentsApi = {
   },
 
   update: async (id: string, payload: ShipmentUpdate): Promise<Shipment> => {
-    const { data } = await api.put<Shipment>(`/shipments/${id}`, payload);
+    const { data } = await api.patch<Shipment>(`/shipments/${id}`, payload);
     return data;
   },
 
